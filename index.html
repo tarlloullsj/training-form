@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ฟอร์มอบรม">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#003087">
+<title>รายงานสรุปผลการฝึกอบรม</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#003087;--p2:#1a4db5;--acc:#f5a623;--acc2:#ffd27a;
+  --bg:#f0f3fa;--card:#fff;--border:#dde3f0;
+  --txt:#111827;--muted:#64748b;--ok:#059669;--err:#dc2626;
+  --r:14px;
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
+  --sl:env(safe-area-inset-left,0px);
+  --sr:env(safe-area-inset-right,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{
+  font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--txt);
+  min-height:100vh;min-height:100dvh;
+  padding-bottom:calc(76px + var(--sb));
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER ── */
+.hdr{
+  background:var(--p);
+  padding:calc(var(--st) + 10px) calc(var(--sr) + 14px) 0 calc(var(--sl) + 14px);
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 16px rgba(0,0,0,.22);
+}
+.hdr-row{display:flex;align-items:center;gap:10px;max-width:700px;margin:0 auto;padding-bottom:10px;}
+.hdr-ico{width:38px;height:38px;background:var(--acc);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.hdr-txt{flex:1;min-width:0;}
+.hdr-txt h1{font-size:clamp(12px,3.8vw,15px);font-weight:700;color:#fff;line-height:1.3;}
+.hdr-txt p{font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;}
+.rno{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:7px;padding:5px 9px;text-align:center;flex-shrink:0;}
+.rno .rl{font-size:8px;color:rgba(255,255,255,.6);letter-spacing:.06em;text-transform:uppercase;}
+.rno .rv{font-size:13px;font-weight:700;color:var(--acc2);white-space:nowrap;}
+
+/* ── PROGRESS ── */
+.prog-wrap{background:rgba(255,255,255,.1);height:3px;}
+.prog-bar{height:3px;background:var(--acc);width:20%;transition:width .35s ease;}
+
+/* ── TAB NAV ── */
+.tab-nav{
+  display:flex;overflow-x:auto;gap:0;background:rgba(0,0,0,.15);
+  padding:0 calc(var(--sl) + 4px);
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab{
+  flex-shrink:0;padding:9px 13px;font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.5);border:none;background:none;cursor:pointer;
+  border-bottom:2.5px solid transparent;transition:color .2s,border-color .2s;
+  font-family:'Sarabun',sans-serif;white-space:nowrap;
+}
+.tab.on{color:var(--acc2);border-bottom-color:var(--acc);}
+
+/* ── PAGES ── */
+.wrap{max-width:700px;margin:0 auto;padding:14px 12px;}
+.pg{display:none;animation:fu .22s ease;}
+.pg.on{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── CARD ── */
+.card{background:var(--card);border-radius:var(--r);box-shadow:0 2px 10px rgba(0,48,135,.07);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;}
+.card-h{background:linear-gradient(90deg,var(--p),var(--p2));padding:11px 15px;font-weight:700;font-size:13px;color:#fff;display:flex;align-items:center;gap:7px;}
+.card-b{padding:15px;}
+
+/* ── FIELDS ── */
+.f{display:flex;flex-direction:column;gap:4px;margin-bottom:13px;}
+.f:last-child{margin-bottom:0;}
+.f label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.req{color:var(--err);}
+.f input,.f select{
+  border:1.5px solid var(--border);border-radius:10px;
+  padding:12px 13px;font-family:'Sarabun',sans-serif;
+  font-size:16px;color:var(--txt);background:#f7f9ff;
+  width:100%;-webkit-appearance:none;appearance:none;
+  transition:border-color .2s,box-shadow .2s;min-height:48px;
+}
+.f input:focus,.f select:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 3px rgba(0,48,135,.09);background:#fff;}
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='8'%3E%3Cpath d='M1 1l5.5 5.5L12 1' stroke='%2364748b' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:38px;
+}
+.nr3{display:grid;grid-template-columns:108px 1fr 1fr;gap:7px;}
+@media(max-width:360px){.nr3{grid-template-columns:96px 1fr;}.ln{grid-column:1/-1;}}
+
+/* ── STEPPER ── */
+.stp{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:#f7f9ff;}
+.stp button{width:46px;min-height:48px;border:none;background:none;font-size:22px;color:var(--p);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s;font-family:'Sarabun',sans-serif;}
+.stp button:active{background:#e4eaf8;}
+.stp input{flex:1;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);border-radius:0;text-align:center;font-size:18px;font-weight:700;min-height:48px;background:#fff;padding:0 4px;font-family:'Sarabun',sans-serif;color:var(--txt);}
+.stp input:focus{outline:none;box-shadow:none;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.g2 .f{margin-bottom:0;}
+
+/* ── SIGNATURE ── */
+.sig-w{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:#f7f9ff;}
+.sig-bar{background:#edf1f9;padding:7px 12px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);}
+.sig-clr{background:none;border:none;color:var(--p);font-size:12px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif;padding:2px 8px;border-radius:5px;}
+.sig-clr:active{background:#dde5f5;}
+canvas.sig{display:block;width:100%;height:120px;cursor:crosshair;touch-action:none;background:#fff;}
+
+/* ── LICENSE ── */
+.lr{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid #f0f3fa;gap:10px;}
+.lr:last-child{border-bottom:none;}
+.ln2{flex:1;font-size:14px;}
+.li{width:76px;border:1.5px solid var(--border);border-radius:8px;padding:8px 5px;text-align:center;font-size:16px;font-weight:700;font-family:'Sarabun',sans-serif;background:#f7f9ff;-webkit-appearance:none;}
+.li:focus{outline:none;border-color:var(--p);}
+.ltot{background:#eef3ff;border-radius:10px;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;margin-top:11px;}
+.ltot .ll{font-size:13px;font-weight:700;color:var(--p);}
+.ltot .lv{font-size:30px;font-weight:700;color:var(--p);}
+
+/* ── GAS URL SETUP ── */
+.setup-box{background:#fff8e6;border:1.5px solid #f5a623;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+.setup-box p{font-size:13px;color:#7a5500;margin-bottom:8px;line-height:1.5;}
+.setup-box input{border:1.5px solid #f5a623;border-radius:8px;padding:10px 12px;font-size:14px;font-family:'Sarabun',sans-serif;width:100%;background:#fff;margin-bottom:8px;}
+.setup-box input:focus{outline:none;border-color:var(--p);}
+.setup-box button{background:var(--p);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;width:100%;}
+
+/* ── BOTTOM NAV ── */
+.bot{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--card);border-top:1px solid var(--border);
+  padding:9px calc(var(--sr)+11px) calc(var(--sb)+9px) calc(var(--sl)+11px);
+  display:flex;gap:9px;max-width:700px;margin:0 auto;
+  box-shadow:0 -3px 18px rgba(0,0,0,.07);
+}
+.bb,.bn,.bs{min-height:52px;border-radius:12px;border:none;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.bb{background:var(--bg);color:var(--p);border:2px solid var(--border);flex:0 0 74px;}
+.bb:active{background:var(--border);}
+.bn{flex:1;background:var(--p);color:#fff;box-shadow:0 4px 14px rgba(0,48,135,.28);}
+.bn:active{background:var(--p2);transform:scale(.98);}
+.bs{flex:1;background:var(--ok);color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.28);}
+.bs:active{opacity:.85;transform:scale(.98);}
+.bs.ld{opacity:.7;pointer-events:none;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:calc(78px + var(--sb) + 10px);left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:#111827;color:#fff;padding:11px 18px;
+  border-radius:11px;font-size:13px;z-index:999;
+  opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);
+  max-width:calc(100vw - 28px);text-align:center;
+  box-shadow:0 8px 28px rgba(0,0,0,.28);pointer-events:none;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--ok);}
+.toast.er{background:var(--err);}
+
+/* ── SUCCESS ── */
+.succ{display:none;text-align:center;padding:40px 20px;animation:fu .35s ease;}
+.succ.on{display:block;}
+.succ-ico{font-size:68px;margin-bottom:14px;}
+.succ h2{font-size:22px;font-weight:700;color:var(--ok);margin-bottom:8px;}
+.succ p{color:var(--muted);font-size:14px;margin-bottom:20px;}
+.succ-rno{background:#f0fdf4;border:2px solid #86efac;border-radius:11px;padding:13px;margin-bottom:22px;font-size:17px;font-weight:700;color:var(--ok);}
+.btn-new{background:var(--p);color:#fff;border:none;border-radius:12px;padding:15px 28px;font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;width:100%;max-width:280px;}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-row">
+    <div class="hdr-ico">📋</div>
+    <div class="hdr-txt">
+      <h1>รายงานสรุปผลการฝึกอบรม</h1>
+      <p id="dateDisp"></p>
+    </div>
+    <div class="rno"><div class="rl">REPORT NO.</div><div class="rv" id="rno">--</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab on" onclick="go(0)">📁 รายละเอียด</button>
+    <button class="tab" onclick="go(1)">👤 ตัวแทน</button>
+    <button class="tab" onclick="go(2)">🤝 ลูกค้า</button>
+    <button class="tab" onclick="go(3)">🚛 UIO</button>
+    <button class="tab" onclick="go(4)">🎓 ผู้เข้าอบรม</button>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- SUCCESS -->
+  <div class="succ" id="succ">
+    <div class="succ-ico">✅</div>
+    <h2>ส่งข้อมูลสำเร็จ!</h2>
+    <p>ข้อมูลถูกบันทึกลง Google Sheets เรียบร้อยแล้ว</p>
+    <div class="succ-rno" id="succRno"></div>
+    <button class="btn-new" onclick="newForm()">➕ สร้างรายงานใหม่</button>
+  </div>
+
+  <!-- PAGE 0: รายละเอียด -->
+  <div class="pg on" id="pg0">
+    <!-- GAS URL Setup box (ซ่อนหลังจากบันทึกแล้ว) -->
+    <div class="setup-box" id="setupBox">
+      <p>⚙️ <strong>ตั้งค่าครั้งแรก:</strong> วาง URL จาก Google Apps Script แล้วกดบันทึก (ทำครั้งเดียวพอ)</p>
+      <input type="url" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" />
+      <button onclick="saveGasUrl()">💾 บันทึก URL</button>
+    </div>
+    <div class="card">
+      <div class="card-h">🏢 รายละเอียดการฝึกอบรม</div>
+      <div class="card-b">
+        <div class="f"><label>ชื่อบริษัทลูกค้า <span class="req">*</span></label><input type="text" id="companyName" placeholder="กรอกชื่อบริษัท" autocomplete="organization"/></div>
+        <div class="f"><label>จังหวัด <span class="req">*</span></label><select id="province"><option value="">-- เลือกจังหวัด --</option></select></div>
+        <div class="f"><label>วันที่อบรม <span class="req">*</span></label><input type="date" id="trainingDate"/></div>
+        <div class="f"><label>สถานที่อบรม <span class="req">*</span></label><input type="text" id="venue" placeholder="กรอกสถานที่อบรม"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 1: ตัวแทน -->
+  <div class="pg" id="pg1">
+    <div class="card">
+      <div class="card-h">👤 ข้อมูลตัวแทนจำหน่าย</div>
+      <div class="card-b">
+        <div class="f">
+          <label>ชื่อ-นามสกุล <span class="req">*</span></label>
+          <div class="nr3">
+            <select id="dealerPrefix"><option value="นาย">นาย</option><option value="นางสาว">นางสาว</option><option value="นาง">นาง</option></select>
+            <input type="text" id="dealerFirst" placeholder="ชื่อ" autocomplete="given-name"/>
+            <input type="text" id="dealerLast" placeholder="นามสกุล" autocomplete="family-name" class="ln"/>
+          </div>
+        </div>
+        <div class="f"><label>ตำแหน่ง</label><input type="text" id="dealerPos" placeholder="เช่น ผู้จัดการ"/></div>
+        <div class="f"><label>ตัวแทนจำหน่าย <span class="req">*</span></label><input type="text" id="dealerName" placeholder="ชื่อบริษัทตัวแทน"/></div>
+        <div class="f"><label>สาขา</label><input type="text" id="dealerBranch" placeholder="ชื่อสาขา"/></div>
+        <div class="f"><label>เบอร์โทร</label><input type="tel" id="dealerPhone" placeholder="0xx-xxx-xxxx" inputmode="tel" autocomplete="tel"/></div>
+        <div class="f">
+          <label>ลายเซ็นตัวแทนจำหน่าย</label>
+          <div class="sig-w">
+            <div class="sig-bar"><span>วาดลายเซ็นด้านล่าง</span><button class="sig-clr" onclick="clrSig('sd')">ล้าง</button></div>
+            <canvas id="sd" class="sig"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: ลูกค้า -->
+  <div class="pg" id="pg2">
+    <div class="card">
+      <div class="card-h">🤝 ข้อมูลลูกค้า (ผู้ประสานงาน)</div>
+      <div class="card-b">
+        <div class="f">
+          <label>ชื่อ-นามสกุล <span class="req">*</span></label>
+          <div class="nr3">
+            <select id="custPrefix"><option value="นาย">นาย</option><option value="นางสาว">นางสาว</option><option value="นาง">นาง</option></select>
+            <input type="text" id="custFirst" placeholder="ชื่อ" autocomplete="given-name"/>
+            <input type="text" id="custLast" placeholder="นามสกุล" autocomplete="family-name" class="ln"/>
+          </div>
+        </div>
+        <div class="f"><label>ตำแหน่ง</label><input type="text" id="custPos" placeholder="เช่น หัวหน้าช่าง"/></div>
+        <div class="f"><label>บริษัท / ตัวแทนจำหน่าย</label><input type="text" id="custDealer" placeholder="ชื่อบริษัท" autocomplete="organization"/></div>
+        <div class="f"><label>สาขา</label><input type="text" id="custBranch" placeholder="ชื่อสาขา"/></div>
+        <div class="f"><label>เบอร์โทร</label><input type="tel" id="custPhone" placeholder="0xx-xxx-xxxx" inputmode="tel" autocomplete="tel"/></div>
+        <div class="f">
+          <label>ลายเซ็นผู้ประสานงาน</label>
+          <div class="sig-w">
+            <div class="sig-bar"><span>วาดลายเซ็นด้านล่าง</span><button class="sig-clr" onclick="clrSig('sc')">ล้าง</button></div>
+            <canvas id="sc" class="sig"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: UIO -->
+  <div class="pg" id="pg3">
+    <div class="card">
+      <div class="card-h">📅 อายุรถ (คัน)</div>
+      <div class="card-b">
+        <div class="g2">
+          <div class="f"><label>0–3 ปี (วารันตี)</label><div class="stp"><button onclick="stp('a03',-1)">−</button><input type="number" id="a03" value="0" min="0" inputmode="numeric"/><button onclick="stp('a03',1)">+</button></div></div>
+          <div class="f"><label>4–7 ปี (ซ่อมหนัก)</label><div class="stp"><button onclick="stp('a47',-1)">−</button><input type="number" id="a47" value="0" min="0" inputmode="numeric"/><button onclick="stp('a47',1)">+</button></div></div>
+          <div class="f"><label>มากกว่า 7 ปี</label><div class="stp"><button onclick="stp('a7p',-1)">−</button><input type="number" id="a7p" value="0" min="0" inputmode="numeric"/><button onclick="stp('a7p',1)">+</button></div></div>
+          <div class="f"><label>เพิ่มเติม</label><div class="stp"><button onclick="stp('aOt',-1)">−</button><input type="number" id="aOt" value="0" min="0" inputmode="numeric"/><button onclick="stp('aOt',1)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h">🏷️ ยี่ห้อรถ (คัน)</div>
+      <div class="card-b">
+        <div class="g2">
+          <div class="f"><label>Hino</label><div class="stp"><button onclick="stp('bHi',-1)">−</button><input type="number" id="bHi" value="0" min="0" inputmode="numeric"/><button onclick="stp('bHi',1)">+</button></div></div>
+          <div class="f"><label>Isuzu</label><div class="stp"><button onclick="stp('bIs',-1)">−</button><input type="number" id="bIs" value="0" min="0" inputmode="numeric"/><button onclick="stp('bIs',1)">+</button></div></div>
+          <div class="f"><label>Fuso</label><div class="stp"><button onclick="stp('bFu',-1)">−</button><input type="number" id="bFu" value="0" min="0" inputmode="numeric"/><button onclick="stp('bFu',1)">+</button></div></div>
+          <div class="f"><label>UD Truck</label><div class="stp"><button onclick="stp('bUD',-1)">−</button><input type="number" id="bUD" value="0" min="0" inputmode="numeric"/><button onclick="stp('bUD',1)">+</button></div></div>
+          <div class="f"><label>Scania</label><div class="stp"><button onclick="stp('bSc',-1)">−</button><input type="number" id="bSc" value="0" min="0" inputmode="numeric"/><button onclick="stp('bSc',1)">+</button></div></div>
+          <div class="f"><label>อื่นๆ</label><div class="stp"><button onclick="stp('bOt',-1)">−</button><input type="number" id="bOt" value="0" min="0" inputmode="numeric"/><button onclick="stp('bOt',1)">+</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: ผู้เข้าอบรม -->
+  <div class="pg" id="pg4">
+    <div class="card">
+      <div class="card-h">🎓 ประเภทใบอนุญาตขับขี่</div>
+      <div class="card-b">
+        <div class="lr"><span class="ln2">ส่วนบุคคล</span><input class="li" type="number" id="lPe" value="0" min="0" inputmode="numeric" oninput="calTot()"/></div>
+        <div class="lr"><span class="ln2">ท.2, บ.2</span><input class="li" type="number" id="lT2" value="0" min="0" inputmode="numeric" oninput="calTot()"/></div>
+        <div class="lr"><span class="ln2">ท.3</span><input class="li" type="number" id="lT3" value="0" min="0" inputmode="numeric" oninput="calTot()"/></div>
+        <div class="lr"><span class="ln2">ท.4</span><input class="li" type="number" id="lT4" value="0" min="0" inputmode="numeric" oninput="calTot()"/></div>
+        <div class="lr" style="flex-wrap:wrap;gap:7px;">
+          <span style="flex:1 1 100%;font-size:12px;color:var(--muted);">อื่นๆ โปรดระบุ:</span>
+          <input type="text" id="lOtD" placeholder="ระบุประเภท..." style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:'Sarabun',sans-serif;min-height:44px;background:#f7f9ff;-webkit-appearance:none;"/>
+          <input class="li" type="number" id="lOt" value="0" min="0" inputmode="numeric" oninput="calTot()"/>
+        </div>
+        <div class="ltot"><span class="ll">รวมผู้เข้าอบรมทั้งหมด</span><span class="lv" id="tot">0</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bot" id="botNav">
+  <button class="bb" id="bBack" onclick="prev()" style="display:none">◀</button>
+  <button class="bn" id="bNext" onclick="next()">ถัดไป ▶</button>
+  <button class="bs" id="bSub" onclick="submitForm()" style="display:none">📤 ส่งข้อมูล</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── PROVINCES ──
+var PV=["กระบี่","กาญจนบุรี","กาฬสินธุ์","กำแพงเพชร","ขอนแก่น","จันทบุรี","ฉะเชิงเทรา","ชลบุรี","ชัยนาท","ชัยภูมิ","ชุมพร","เชียงราย","เชียงใหม่","ตรัง","ตราด","ตาก","นครนายก","นครปฐม","นครพนม","นครราชสีมา","นครศรีธรรมราช","นครสวรรค์","นนทบุรี","นราธิวาส","น่าน","บึงกาฬ","บุรีรัมย์","ปทุมธานี","ประจวบคีรีขันธ์","ปราจีนบุรี","ปัตตานี","พระนครศรีอยุธยา","พะเยา","พังงา","พัทลุง","พิจิตร","พิษณุโลก","เพชรบุรี","เพชรบูรณ์","แพร่","ภูเก็ต","มหาสารคาม","มุกดาหาร","แม่ฮ่องสอน","ยโสธร","ยะลา","ร้อยเอ็ด","ระนอง","ระยอง","ราชบุรี","ลพบุรี","ลำปาง","ลำพูน","เลย","ศรีสะเกษ","สกลนคร","สงขลา","สตูล","สมุทรปราการ","สมุทรสงคราม","สมุทรสาคร","สระแก้ว","สระบุรี","สิงห์บุรี","สุโขทัย","สุพรรณบุรี","สุราษฎร์ธานี","สุรินทร์","หนองคาย","หนองบัวลำภู","อ่างทอง","อำนาจเจริญ","อุดรธานี","อุตรดิตถ์","อุทัยธานี","อุบลราชธานี","กรุงเทพมหานคร"];
+(function(){var s=document.getElementById('province');PV.forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;s.appendChild(o);});})();
+
+// ── GAS URL ──
+function saveGasUrl(){
+  var v=document.getElementById('gasUrlInput').value.trim();
+  if(!v){toast('⚠️ กรุณาวาง URL ก่อน','er');return;}
+  localStorage.setItem('GAS_URL',v);
+  document.getElementById('setupBox').style.display='none';
+  toast('✅ บันทึก URL เรียบร้อย','ok');
+}
+(function(){
+  var saved=localStorage.getItem('GAS_URL');
+  if(saved){document.getElementById('gasUrlInput').value=saved;document.getElementById('setupBox').style.display='none';}
+})();
+
+// ── DATE & RNO ──
+function pad(n){return n.toString().padStart(2,'0');}
+var RNO='';
+function initDate(){
+  var n=new Date(),ty=n.getFullYear()+543;
+  var mn=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  document.getElementById('dateDisp').textContent=n.getDate()+' '+mn[n.getMonth()]+' '+ty;
+  document.getElementById('trainingDate').value=n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());
+}
+function genRno(){
+  var n=new Date(),yy=(n.getFullYear()+543).toString().slice(-2);
+  var r='RPT-'+yy+pad(n.getMonth()+1)+pad(n.getDate())+'-'+(Math.floor(Math.random()*9000)+1000);
+  document.getElementById('rno').textContent=r;return r;
+}
+initDate();RNO=genRno();
+
+// ── STEPPER ──
+function stp(id,d){var el=document.getElementById(id);el.value=Math.max(0,(parseInt(el.value)||0)+d);}
+
+// ── SIGNATURE ──
+var SG={};
+function initSig(id){
+  var c=document.getElementById(id),ctx=c.getContext('2d');
+  function rsz(){var r=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=r.width*dpr;c.height=r.height*dpr;ctx.scale(dpr,dpr);ctx.strokeStyle='#111827';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';}
+  rsz();SG[id]={ctx:ctx,c:c,on:false};
+  function pos(e){var r=c.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}
+  c.addEventListener('mousedown',function(e){var p=pos(e);SG[id].on=true;ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  c.addEventListener('mousemove',function(e){if(!SG[id].on)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  c.addEventListener('mouseup',function(){SG[id].on=false;});
+  c.addEventListener('mouseleave',function(){SG[id].on=false;});
+  c.addEventListener('touchstart',function(e){e.preventDefault();var p=pos(e);SG[id].on=true;ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  c.addEventListener('touchmove',function(e){e.preventDefault();if(!SG[id].on)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  c.addEventListener('touchend',function(){SG[id].on=false;});
+}
+function clrSig(id){var g=SG[id];g.ctx.clearRect(0,0,g.c.width,g.c.height);}
+function getSig(id){return SG[id].c.toDataURL('image/png');}
+initSig('sd');initSig('sc');
+
+// ── PAGES ──
+var CP=0,TP=5;
+function go(n){
+  document.querySelectorAll('.pg').forEach(function(p,i){p.classList.toggle('on',i===n);});
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('on',i===n);});
+  CP=n;updNav();updProg();
+  window.scrollTo({top:0,behavior:'smooth'});
+  var tabs=document.querySelectorAll('.tab');
+  if(tabs[n])tabs[n].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+function updNav(){
+  document.getElementById('bBack').style.display=CP>0?'flex':'none';
+  document.getElementById('bNext').style.display=CP<TP-1?'flex':'none';
+  document.getElementById('bSub').style.display=CP===TP-1?'flex':'none';
+}
+function updProg(){document.getElementById('progBar').style.width=((CP+1)/TP*100)+'%';}
+function next(){if(val(CP))go(CP+1);}
+function prev(){if(CP>0)go(CP-1);}
+updNav();updProg();
+
+// ── VALIDATE ──
+function chk(id,lbl){var v=document.getElementById(id).value.trim();if(!v){toast('⚠️ กรุณากรอก: '+lbl,'er');document.getElementById(id).focus();return false;}return true;}
+function val(p){
+  if(p===0)return chk('companyName','ชื่อบริษัท')&&chk('province','จังหวัด')&&chk('venue','สถานที่อบรม');
+  if(p===1)return chk('dealerFirst','ชื่อตัวแทน')&&chk('dealerName','ตัวแทนจำหน่าย');
+  if(p===2)return chk('custFirst','ชื่อผู้ประสานงาน');
+  return true;
+}
+
+// ── TOTAL ──
+function calTot(){
+  var t=['lPe','lT2','lT3','lT4','lOt'].reduce(function(s,id){return s+(parseInt(document.getElementById(id).value)||0);},0);
+  document.getElementById('tot').textContent=t;
+}
+
+// ── SUBMIT via fetch → GAS ──
+function submitForm(){
+  if(!val(4))return;
+  var url=localStorage.getItem('GAS_URL');
+  if(!url){
+    document.getElementById('setupBox').style.display='block';
+    go(0);
+    toast('⚠️ กรุณาตั้งค่า URL ก่อน','er');
+    return;
+  }
+  var btn=document.getElementById('bSub');
+  btn.classList.add('ld');btn.textContent='⏳ กำลังส่ง...';
+  var d={
+    reportNo:RNO,trainingDate:document.getElementById('trainingDate').value,
+    companyName:document.getElementById('companyName').value,
+    province:document.getElementById('province').value,
+    venue:document.getElementById('venue').value,
+    dealerPrefix:document.getElementById('dealerPrefix').value,
+    dealerFirstName:document.getElementById('dealerFirst').value,
+    dealerLastName:document.getElementById('dealerLast').value,
+    dealerPosition:document.getElementById('dealerPos').value,
+    dealerName:document.getElementById('dealerName').value,
+    dealerBranch:document.getElementById('dealerBranch').value,
+    dealerPhone:document.getElementById('dealerPhone').value,
+    dealerSig:getSig('sd'),
+    customerPrefix:document.getElementById('custPrefix').value,
+    customerFirstName:document.getElementById('custFirst').value,
+    customerLastName:document.getElementById('custLast').value,
+    customerPosition:document.getElementById('custPos').value,
+    customerDealer:document.getElementById('custDealer').value,
+    customerBranch:document.getElementById('custBranch').value,
+    customerPhone:document.getElementById('custPhone').value,
+    customerSig:getSig('sc'),
+    age0_3:document.getElementById('a03').value,
+    age4_7:document.getElementById('a47').value,
+    age7plus:document.getElementById('a7p').value,
+    ageOther:document.getElementById('aOt').value,
+    brandHino:document.getElementById('bHi').value,
+    brandIsuzu:document.getElementById('bIs').value,
+    brandFuso:document.getElementById('bFu').value,
+    brandUD:document.getElementById('bUD').value,
+    brandScania:document.getElementById('bSc').value,
+    brandOther:document.getElementById('bOt').value,
+    licPersonal:document.getElementById('lPe').value,
+    licT2B2:document.getElementById('lT2').value,
+    licT3:document.getElementById('lT3').value,
+    licT4:document.getElementById('lT4').value,
+    licOtherDesc:document.getElementById('lOtD').value,
+    licOther:document.getElementById('lOt').value,
+    totalParticipants:document.getElementById('tot').textContent,
+    timestamp:new Date().toISOString()
+  };
+  fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
+    .then(function(){
+      btn.classList.remove('ld');btn.textContent='📤 ส่งข้อมูล';
+      document.getElementById('botNav').style.display='none';
+      document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+      document.getElementById('tabNav').style.display='none';
+      document.getElementById('succRno').textContent='Report No: '+RNO;
+      document.getElementById('succ').classList.add('on');
+    })
+    .catch(function(err){
+      btn.classList.remove('ld');btn.textContent='📤 ส่งข้อมูล';
+      toast('❌ ส่งไม่ได้ ตรวจสอบ URL หรืออินเทอร์เน็ต','er');
+    });
+}
+
+// ── NEW FORM ──
+function newForm(){
+  ['companyName','province','venue','trainingDate','dealerFirst','dealerLast','dealerPos','dealerName','dealerBranch','dealerPhone',
+   'custFirst','custLast','custPos','custDealer','custBranch','custPhone','lOtD'].forEach(function(id){
+    var el=document.getElementById(id);if(el.tagName==='SELECT')el.selectedIndex=0;else el.value='';
+  });
+  ['a03','a47','a7p','aOt','bHi','bIs','bFu','bUD','bSc','bOt','lPe','lT2','lT3','lT4','lOt'].forEach(function(id){document.getElementById(id).value=0;});
+  clrSig('sd');clrSig('sc');calTot();
+  initDate();RNO=genRno();
+  document.getElementById('succ').classList.remove('on');
+  document.getElementById('botNav').style.display='flex';
+  document.getElementById('tabNav').style.display='flex';
+  go(0);
+}
+
+// ── TOAST ──
+var _tt;
+function toast(msg,type){
+  var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'')+' on';
+  clearTimeout(_tt);_tt=setTimeout(function(){t.className='toast';},3500);
+}
+</script>
+</body>
+</html>
